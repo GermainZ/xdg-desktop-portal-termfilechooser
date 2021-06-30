@@ -1,0 +1,4 @@
+[D-BUS Service]
+Name=org.freedesktop.impl.portal.desktop.termfilechooser
+Exec=@libexecdir@/xdg-desktop-portal-termfilechooser
+@systemd_service@
