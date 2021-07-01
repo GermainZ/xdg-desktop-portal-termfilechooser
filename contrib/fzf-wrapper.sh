@@ -30,11 +30,11 @@ termcmd="${TERMCMD:-/usr/bin/kitty}"
 if [ "$save" = "1" ]; then
     cmd="dialog --yesno \"Save to \"$path\"?\" 0 0 && ( printf '%s' \"$path\" > $out ) || ( printf '%s' 'Input path to write to: ' && read input && printf '%s' \"\$input\" > $out)"
 elif [ "$directory" = "1" ]; then
-    cmd="fd -a --base-directory=$HOME -td | fzf +m > $out"
+    cmd="fd -a --base-directory=$HOME -td | fzf +m --prompt 'Select directory > ' > $out"
 elif [ "$multiple" = "1" ]; then
-    cmd="fd -a --base-directory=$HOME | fzf -m > $out"
+    cmd="fd -a --base-directory=$HOME | fzf -m --prompt 'Select files > ' > $out"
 else
-    cmd="fd -a --base-directory=$HOME | fzf +m > $out"
+    cmd="fd -a --base-directory=$HOME | fzf +m --prompt 'Select file > ' > $out"
 fi
 
 "$termcmd" sh -c "$cmd"

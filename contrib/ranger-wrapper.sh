@@ -28,16 +28,8 @@ out="$5"
 cmd="/usr/bin/ranger"
 termcmd="${TERMCMD:-/usr/bin/kitty}"
 
-if [ "$directory" = "1" ]; then
-    cmd="$cmd --choosedir=$out --show-only-dirs"
-elif [ "$multiple" = "1" ]; then
-    cmd="$cmd --choosefiles=$out"
-else
-    cmd="$cmd --choosefile=$out"
-fi
-
 if [ "$save" = "1" ]; then
-    set -- "$path"
+    set -- --choosefile="$out" --cmd='echo Select save path (see tutorial in preview pane; try pressing zv or zp if no preview)' "$path"
     printf '%s' 'xdg-desktop-portal-termfilechooser saving files tutorial
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -59,8 +51,12 @@ Notes:
 2) If you quit ranger without opening a file, this file
    will be removed and the save operation aborted.
 ' > "$path"
+elif [ "$directory" = "1" ]; then
+    set -- --choosedir="$out" --show-only-dirs --cmd="echo Select directory (quit in dir to select it)"
+elif [ "$multiple" = "1" ]; then
+    set -- --choosefiles="$out" --cmd="echo Select file(s) (open file to select it; <Space> to select multiple)"
 else
-    set -- ""
+    set -- --choosefile="$out" --cmd="echo Select file (open file to select it)"
 fi
 
 "$termcmd" -- $cmd "$@"
