@@ -110,7 +110,7 @@ static int method_open_file(sd_bus_message *msg, void *data, sd_bus_error *ret_e
     }
     char *key;
     int inner_ret = 0;
-    bool multiple, directory;
+    int multiple, directory;
     while ((ret = sd_bus_message_enter_container(msg, 'e', "sv")) > 0) {
         inner_ret = sd_bus_message_read(msg, "s", &key);
         if (inner_ret < 0) {
@@ -120,14 +120,14 @@ static int method_open_file(sd_bus_message *msg, void *data, sd_bus_error *ret_e
         logprint(DEBUG, "dbus: option %s", key);
         if (strcmp(key, "multiple") == 0) {
             sd_bus_message_read(msg, "v", "b", &multiple);
-            logprint(DEBUG, "dbus: option multiple: %x", multiple);
+            logprint(DEBUG, "dbus: option multiple: %d", multiple);
         } else if (strcmp(key, "modal") == 0) {
-            bool modal;
+            int modal;
             sd_bus_message_read(msg, "v", "b", &modal);
-            logprint(DEBUG, "dbus: option modal: %x", modal);
+            logprint(DEBUG, "dbus: option modal: %d", modal);
         } else if (strcmp(key, "directory") == 0) {
             sd_bus_message_read(msg, "v", "b", &directory);
-            logprint(DEBUG, "dbus: option directory: %x", directory);
+            logprint(DEBUG, "dbus: option directory: %d", directory);
         } else {
             logprint(WARN, "dbus: unknown option %s", key);
             sd_bus_message_skip(msg, "v");
