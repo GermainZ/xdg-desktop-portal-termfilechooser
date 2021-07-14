@@ -45,6 +45,12 @@ These options need to be placed under the **[filechooser]** section.
 	An example wrapper script which uses fd and fzf can also be found at
 	/usr/share/xdg-desktop-portal-termfilechooser/fzf-wrapper.sh.
 
+**default_dir** = _directory_
+	Default directory to save files in, if the invoking program does not
+	provide one.
+
+	The default value is /tmp.
+
 # SEE ALSO
 
 **ranger**(1)

@@ -9,9 +9,11 @@
 #include <ini.h>
 
 #define FILECHOOSER_DEFAULT_CMD "/usr/share/xdg-desktop-portal-termfilechooser/ranger-wrapper.sh"
+#define FILECHOOSER_DEFAULT_DIR "/tmp"
 
 void print_config(enum LOGLEVEL loglevel, struct xdpw_config *config) {
     logprint(loglevel, "config: cmd:  %s", config->filechooser_conf.cmd);
+    logprint(loglevel, "config: default_dir:  %s", config->filechooser_conf.default_dir);
 }
 
 // NOTE: calling finish_config won't prepare the config to be read again from config file
@@ -19,6 +21,7 @@ void print_config(enum LOGLEVEL loglevel, struct xdpw_config *config) {
 void finish_config(struct xdpw_config *config) {
     logprint(DEBUG, "config: destroying config");
     free(config->filechooser_conf.cmd);
+    free(config->filechooser_conf.default_dir);
 }
 
 static void parse_string(char **dest, const char* value) {
@@ -33,6 +36,8 @@ static void parse_string(char **dest, const char* value) {
 static int handle_ini_filechooser(struct config_filechooser *filechooser_conf, const char *key, const char *value) {
     if (strcmp(key, "cmd") == 0) {
         parse_string(&filechooser_conf->cmd, value);
+    } else if (strcmp(key, "default_dir") == 0) {
+        parse_string(&filechooser_conf->default_dir, value);
     } else {
         logprint(TRACE, "config: skipping invalid key in config file");
         return 0;
@@ -56,6 +61,9 @@ static void default_config(struct xdpw_config *config) {
     size_t size = snprintf(NULL, 0, "%s", FILECHOOSER_DEFAULT_CMD) + 1;
     config->filechooser_conf.cmd = malloc(size);
     snprintf(config->filechooser_conf.cmd, size, "%s", FILECHOOSER_DEFAULT_CMD);
+    size = snprintf(NULL, 0, "%s", FILECHOOSER_DEFAULT_DIR) + 1;
+    config->filechooser_conf.default_dir = malloc(size);
+    snprintf(config->filechooser_conf.default_dir, size, "%s", FILECHOOSER_DEFAULT_DIR);
 }
 
 static bool file_exists(const char *path) {

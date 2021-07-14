@@ -248,7 +248,7 @@ static int method_save_file(sd_bus_message *msg, void *data, sd_bus_error *ret_e
     char *key;
     int inner_ret = 0;
     char *current_name;
-    char *current_folder;
+    char *current_folder = NULL;
     while ((ret = sd_bus_message_enter_container(msg, 'e', "sv")) > 0) {
         inner_ret = sd_bus_message_read(msg, "s", &key);
         if (inner_ret < 0) {
@@ -288,6 +288,16 @@ static int method_save_file(sd_bus_message *msg, void *data, sd_bus_error *ret_e
         xdpw_request_create(sd_bus_message_get_bus(msg), handle);
     if (req == NULL) {
         return -ENOMEM;
+    }
+
+    if (current_folder == NULL) {
+        struct xdpw_state *state = data;
+        char *default_dir = state->config->filechooser_conf.default_dir;
+        if (!default_dir) {
+            logprint(ERROR, "default_dir not specified");
+            return -1;
+        }
+        current_folder = default_dir;
     }
 
     size_t path_size = snprintf(NULL, 0, "%s/%s", current_folder, current_name) + 1;
