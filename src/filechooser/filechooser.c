@@ -59,7 +59,7 @@ static int exec_filechooser(void *data, bool writing, bool multiple, bool direct
         if (ferror(fp)) {
             return 1;
         }
-    } while (cr != EOF);
+    } while (cr != (char)EOF);
     rewind(fp);
 
     if (num_lines == 0) {
