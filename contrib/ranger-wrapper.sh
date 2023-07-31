@@ -25,7 +25,7 @@ save="$3"
 path="$4"
 out="$5"
 
-cmd="/usr/bin/ranger"
+cmd="$(command -v ranger)"
 termcmd="${TERMCMD:-$(command -v kitty)}"
 
 if [ "$save" = "1" ]; then
